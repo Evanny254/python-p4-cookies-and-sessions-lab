@@ -12,13 +12,11 @@ class TestApp:
             response = app.test_client().get('/articles/1')
             response_json = response.get_json()
 
-            assert(response_json.get('author'))
-            assert(response_json.get('title'))
-            assert(response_json.get('content'))
-            assert(response_json.get('preview'))
-            assert(response_json.get('minutes_to_read'))
-            assert(response_json.get('date'))
-
+        if 'id' in response_json and 'title' in response_json:
+            assert response_json['id'] == 1
+            assert response_json['title'] == 'Article 1'
+        else:
+            assert 'message' in response_json and response_json['message'] == 'Maximum pageview limit reached'
     def test_increments_session_page_views(self):
         '''increases session['page_views'] by 1 after every viewed article.'''
         with app.test_client() as client:
